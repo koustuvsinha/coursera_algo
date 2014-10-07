@@ -10,6 +10,7 @@
  *
  *************************************************************************/
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 public class Point implements Comparable<Point> {
@@ -18,7 +19,11 @@ public class Point implements Comparable<Point> {
     public final Comparator<Point> SLOPE_ORDER = new Comparator<Point>() {
 
 		@Override
-		public int compare(Point o1, Point o2) {
+		public int compare( Point o1,  Point o2) {
+			
+			if(o1==null || o2 == null) {
+				throw new NullPointerException();
+			}
 			
 			Double slope1 = slopeTo(o1);
 			Double slope2 = slopeTo(o2);
@@ -32,7 +37,7 @@ public class Point implements Comparable<Point> {
     private final int y;                              // y coordinate
 
     // create the point (x, y)
-    public Point(int x, int y) {
+    public Point( int x,  int y) {
         /* DO NOT MODIFY */
         this.x = x;
         this.y = y;
@@ -45,24 +50,27 @@ public class Point implements Comparable<Point> {
     }
 
     // draw line between this point and that point to standard drawing
-    public void drawTo(Point that) {
+    public void drawTo( Point that) {
         /* DO NOT MODIFY */
         StdDraw.line(this.x, this.y, that.x, that.y);
     }
 
     // slope between this point and that point
-    public double slopeTo(Point that) {
+    public double slopeTo( Point that) {
         /* YOUR CODE HERE */
     	Double m;
     	
-    	if((this.y-that.y)>0 && (this.x==that.x)) {
+    	if((that.y != this.y) && (that.x == this.x)) {
     		return Double.POSITIVE_INFINITY;
     	}
-    	else if ((this.y-that.y)<0 && (this.x==that.x)) {
+    	else if ((that.y == this.y) && (that.x == this.x)) {
     		return Double.NEGATIVE_INFINITY;
     	}
     	else {
-    		m = (double) ((this.y - that.y)/(this.x - that.x));
+    		m = ((double) (that.y - this.y)/(that.x - this.x));
+    		if(m == -0.0) {
+				m = 0.0;
+			}
     		return m;
     	}
     	
@@ -70,16 +78,21 @@ public class Point implements Comparable<Point> {
 
     // is this point lexicographically smaller than that one?
     // comparing y-coordinates and breaking ties by x-coordinates
-    public int compareTo(Point that) {
+    public int compareTo( Point that) {
         /* YOUR CODE HERE */
+    	
+    	if (that == null) {
+    		throw new NullPointerException();
+    	}
+    	
     	if(this.y<that.y) {
     		return -1;
     	}
-    	else if(this.y==that.y) {
-    		if(this.x<that.x) {
+    	else if(this.y == that.y) {
+    		if(this.x < that.x) {
     			return -1;
     		}
-    		else if(this.x>that.x) {
+    		else if(this.x > that.x) {
     			return 1;
     		} else {
     			return 0;
@@ -98,7 +111,19 @@ public class Point implements Comparable<Point> {
     }
 
     // unit test
-    public static void main(String[] args) {
-        /* YOUR CODE HERE */
+    public static void main( String[] args) {
+    	
+    	Point[] points = new Point[2];
+    	points[0] = new Point(339,328);
+    	points[1] = new Point(339,328);
+    	
+    	System.out.println("Starting point " + points[0]);
+    	
+    	for (int i = 1; i < points.length; i++) {
+    		System.out.println("Slope to " + points[i]);
+    		System.out.println(points[0].slopeTo(points[i]));
+    	}
+    	
     }
+   
 }
